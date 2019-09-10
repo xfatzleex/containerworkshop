@@ -1,4 +1,6 @@
-Create Docker File
+Clone CDFSA to working folder
+
+Create Docker File /server
 
 Pull stackupiss/northwind-db:v1 
 
