@@ -2,7 +2,7 @@
 kind: Namespace
 apiVersion: v1
 metadata: 
-  name: newname
+  name: myns
   labels: 
     app: myapp
 
