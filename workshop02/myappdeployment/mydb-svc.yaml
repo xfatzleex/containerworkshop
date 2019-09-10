@@ -4,7 +4,7 @@ apiVersion: v1
 metadata: 
   name: myns
   labels: 
-    app: myapp
+    app: pod-mydb-svc
 
 ---
 kind: Deployment
@@ -14,7 +14,7 @@ metadata:
   name: mydb-svc
   namespace: myns
   labels:
-    app: myns
+    app: pod-mydb-svc
     version: v1
 
 spec: 
@@ -37,3 +37,21 @@ spec:
         ports:
         - name: mysqlport
           containerPort: 3306
+
+---
+kind: Service
+apiVersion: v1
+
+metadata:
+  name: mydb-svc
+  namespace: myns
+  labels:
+    app: pod-mydb-svc
+
+spec:
+  type: ClusterIP
+  selector:
+    app: pod-mydb-svc
+  ports: 3306
+  - name: mydb-svc-port
+    targetPort: mysqlport
