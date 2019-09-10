@@ -52,6 +52,7 @@ spec:
   type: ClusterIP
   selector:
     app: pod-mydb-svc
-  ports: 3306
+  ports:
   - name: mydb-svc-port
+    port: 3306
     targetPort: mysqlport
