@@ -1,0 +1,12 @@
+Create Docker File
+
+Pull stackupiss/northwind-db:v1 
+
+
+Create myvol
+create mynet
+
+docker run -d -v myvol:/var/lib/mysql --network=mynet --name=mydb stackupiss/northwind-db:v1
+
+
+docker run -d -e DB_USER=root -e DB_PASSWORD=changeit -p 3000:3000 --network=mynet --name=myapp myapp:latest
