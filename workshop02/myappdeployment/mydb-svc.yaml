@@ -43,7 +43,7 @@ kind: Service
 apiVersion: v1
 
 metadata:
-  name: mydb-svc
+  name: pod-mydb-svc
   namespace: myns
   labels:
     app: pod-mydb-svc
