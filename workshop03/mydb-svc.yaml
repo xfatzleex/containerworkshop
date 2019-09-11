@@ -30,6 +30,17 @@ spec:
         app: pod-mydb-svc
         version: v1
     spec:
+      volumes:
+      - name: mydb-vol
+        persistentVolumeClaim:
+         claimName: mydb-pvc
+      initContainers:
+      - name: busybox
+        image: busybox
+        command: ["/bin/sh", "-c", "test -e /scrub && rm -rf /scrub/..? /scrub/.[!.] /scrub/*  && test -z \"$(ls -A /scrub)\" || exit 1"]
+        volumeMounts:
+        - name: mydb-vol
+          mountPath: /scrub
       containers:
       - name: mydb-svc
         image: stackupiss/northwind-db:v1
@@ -37,6 +48,9 @@ spec:
         ports:
         - name: mysqlport
           containerPort: 3306
+        volumeMounts:
+        - name: mydb-vol
+          mountPath: /var/lib/mysql
 
 ---
 kind: Service
