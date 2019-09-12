@@ -1,0 +1,47 @@
+---
+kind: Gateway
+apiVersion: networking.istio.io/v1alpha3
+
+metadata:
+    name: weather-gw
+    namespace: myns2
+    labels:
+        app: weather-app
+
+spec:
+    selector:
+        istio: ingressgateway
+
+    servers:
+    - port: 
+        number: 80
+        name: http
+        protocol: HTTP
+      hosts: 
+      - '*'
+
+---
+kind: VirtualService
+apiVersion: networking.istio.io/v1alpha3
+
+metadata:
+  name: weather-vs
+  namespace: myns2
+  labels:
+    app: weather-app
+
+spec:
+  gateways:
+  - weather-gw
+  hosts:
+  - "*"
+  http:
+  - match:
+    - uri:
+      prefix: /
+    route:
+    - destination:
+        host: weatherapp-svc.myns2.svc.cluster.local
+  - route:
+    - destination:
+        host: fortune-svc.myns2.svc.cluster.local
