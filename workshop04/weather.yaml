@@ -1,0 +1,75 @@
+---
+kind: Namespace
+apiVersion: v1
+metadata: 
+  name: myns2
+  labels: 
+    app: weatherapp
+
+---
+kind: Secret
+apiVersion: v1
+
+metadata:
+    name: weatherapp-secret
+    namespace: myns2
+    labels:
+        app: weatherapp-secret
+data: 
+    app_id: ZTQzMmJjMzVmYWIwZWIwZmQxYzY2YmFkNGMwYzc1Mzg=
+
+---
+kind: Deployment
+apiVersion: apps/v1
+
+metadata:
+  name: deploy-weatherapp
+  namespace: myns2
+  labels:
+    app: weatherapp
+    version: v1
+
+spec: 
+  replicas: 2
+  selector: 
+    matchLabels: 
+      app: pod-weatherapp
+      version: v1
+  template: 
+    metadata: 
+      name: pod-weatherapp
+      labels: 
+        app: pod-weatherapp
+        version: v1
+    spec:
+      containers:
+      - name: weatherapp
+        image: stackupiss/weather:v1
+        imagePullPolicy: Always
+        env:
+        - name: APP_ID
+          valueFrom: 
+            secretKeyRef:
+              name: weatherapp-secret
+              key: app_id
+        ports:
+        - name: weatherport
+          containerPort: 3000
+---
+kind: Service
+apiVersion: v1
+
+metadata:
+    name: weatherapp-svc
+    namespace: myns2
+    labels:
+        app: weatherapp
+
+spec:
+    type: LoadBalancer
+    selector:
+        app: pod-weatherapp
+    ports:
+    - name: weatherapp-svc-port
+      port: 80
+      targetPort: weatherport
